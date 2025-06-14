@@ -1,0 +1,828 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "pIUfmPyICTHt"
+   },
+   "source": [
+    "#Implementing Faster R-CNN with PyTorch"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pip install opencv-python"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "pip install torchvision"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 5880,
+     "status": "ok",
+     "timestamp": 1676974727197,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "c7Ir3ywXQ0Fo"
+   },
+   "outputs": [],
+   "source": [
+    "import os.path\n",
+    "import cv2\n",
+    "import numpy as np\n",
+    "import torchvision\n",
+    "import torchvision.transforms as transforms"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 7,
+     "status": "ok",
+     "timestamp": 1676974727197,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "Ac1kJjfgQ7gh"
+   },
+   "outputs": [],
+   "source": [
+    "classes = [\n",
+    "    'background', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',\n",
+    "    'train', 'truck', 'boat', 'traffic light', 'fire hydrant', 'street sign',\n",
+    "    'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse',\n",
+    "    'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'hat', 'backpack',\n",
+    "    'umbrella', 'shoe', 'eye glasses', 'handbag', 'tie', 'suitcase', 'frisbee',\n",
+    "    'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove',\n",
+    "    'skateboard', 'surfboard', 'tennis racket', 'bottle', 'plate', 'wine glass',\n",
+    "    'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple', 'sandwich',\n",
+    "    'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair',\n",
+    "    'couch', 'potted plant', 'bed', 'mirror', 'dining table', 'window', 'desk',\n",
+    "    'toilet', 'door', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',\n",
+    "    'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'blender', 'book',\n",
+    "    'clock', 'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush', 'hair brush']\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 1000,
+     "referenced_widgets": [
+      "490c7e00387e4bf2954dfb13a94f061a",
+      "0a2d8a28cb054eeca386d1046664199c",
+      "3a450c88fabc4801ac86925e05bdab36",
+      "7c52281dcd0c4a2c91d3fc2d26f59f2a",
+      "1fe606703e674e818b2eacb40e937e17",
+      "4bb72ecda850464ab730f58bef22bfd0",
+      "0cd9cb693f0f4eec9e54cdfcc8944dce",
+      "860c422b9baf4e2282424c07b9cd132c",
+      "1788a03ae7c4465f90add4f1506d843f",
+      "066685bf19f5486f92d247330e016e44",
+      "9316bb5814924bd1a863e022d4ba23ee"
+     ]
+    },
+    "executionInfo": {
+     "elapsed": 2711,
+     "status": "ok",
+     "timestamp": 1676974729902,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "0w6rkQVGRLKt",
+    "outputId": "b0dfe654-c7d9-452e-f46b-88abe1054b3b"
+   },
+   "outputs": [],
+   "source": [
+    "# load the pytorch model\n",
+    "model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)\n",
+    "\n",
+    "# set the model in evaluation mode\n",
+    "model.eval()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 321,
+     "status": "ok",
+     "timestamp": 1676974748553,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "qWimaU-5RB52"
+   },
+   "outputs": [],
+   "source": [
+    "image_file = 'london.png'#'source_2.png'\n",
+    "\n",
+    " "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 20970,
+     "status": "ok",
+     "timestamp": 1676974771589,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "_esc8JsjT6Ok",
+    "outputId": "7590c28f-c261-4108-f54e-e84a2679412a"
+   },
+   "outputs": [],
+   "source": [
+    "# Mount Google drive to read data from it \n",
+    "import cv2\n",
+    "DIR = 'london.png'\n",
+    "img_path = 'london.png'\n",
+    "img = cv2.imread(img_path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 14540,
+     "status": "ok",
+     "timestamp": 1676974820918,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "JryxLdJ2RRe5"
+   },
+   "outputs": [],
+   "source": [
+    "# read the image file\n",
+    "img = cv2.imread(DIR)\n",
+    "\n",
+    " \n",
+    "# transform the input to tensor\n",
+    "transform = transforms.Compose([transforms.ToPILImage(), transforms.ToTensor()])\n",
+    "nn_input = transform(img)\n",
+    "output = model([nn_input])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "executionInfo": {
+     "elapsed": 292,
+     "status": "ok",
+     "timestamp": 1676974827972,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "CGKgz0H8RXFK"
+   },
+   "outputs": [],
+   "source": [
+    "# random color for each class\n",
+    "colors = np.random.uniform(0, 255, size=(len(classes), 3))\n",
+    "\n",
+    "# iterate over the network output for all boxes\n",
+    "for box, box_class, score in zip(output[0]['boxes'].detach().numpy(),\n",
+    "                                 output[0]['labels'].detach().numpy(),\n",
+    "                                 output[0]['scores'].detach().numpy()):\n",
+    "\n",
+    "    # filter the boxes by score\n",
+    "    if score > 0.5:\n",
+    "        # transform bounding box format\n",
+    "        box = [(int(box[0]), int(box[1])), (int(box[2]), int(box[3]))]\n",
+    "\n",
+    "        # select class color\n",
+    "        color = colors[box_class]\n",
+    "\n",
+    "        # extract class name\n",
+    "        class_name = classes[box_class]\n",
+    "\n",
+    "        # draw the bounding box\n",
+    "        cv2.rectangle(img=img,\n",
+    "                      pt1=box[0],\n",
+    "                      pt2=box[1],\n",
+    "                      color=color,\n",
+    "                      thickness=2)\n",
+    "\n",
+    "        # display the box class label\n",
+    "        cv2.putText(img=img,\n",
+    "                    text=class_name,\n",
+    "                    org=box[0],\n",
+    "                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,\n",
+    "                    fontScale=1,\n",
+    "                    color=color,\n",
+    "                    thickness=2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 643
+    },
+    "executionInfo": {
+     "elapsed": 7760,
+     "status": "ok",
+     "timestamp": 1676974844700,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "tL3zidm-S9a5",
+    "outputId": "be47c360-c0be-481d-9f04-51e8f9e8fb3b"
+   },
+   "outputs": [],
+   "source": [
+    "from matplotlib import pyplot as plt\n",
+    "plt.figure(figsize=(20,20))\n",
+    "plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "id": "_d38h4BMiFde"
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cap = cv2.VideoCapture(0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "if (cap.isOpened()== False): \n",
+    "  print(\"Error opening video stream or file\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import cv2\n",
+    "\n",
+    "def main():\n",
+    "    cap = cv2.VideoCapture(0)\n",
+    "    if not cap.isOpened():\n",
+    "        print(\"Error opening video stream or file\")\n",
+    "        return\n",
+    "\n",
+    "    while cap.isOpened():\n",
+    "        ret, frame = cap.read()\n",
+    "        if ret:\n",
+    "            cv2.imshow('Frame', frame)\n",
+    "            if cv2.waitKey(25) & 0xFF == ord('q'):\n",
+    "                break\n",
+    "        else:\n",
+    "            break\n",
+    "\n",
+    "    cap.release()\n",
+    "    cv2.destroyAllWindows()\n",
+    "\n",
+    "if __name__ == \"__main__\":\n",
+    "    main()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "executionInfo": {
+     "elapsed": 276,
+     "status": "ok",
+     "timestamp": 1676974940568,
+     "user": {
+      "displayName": "fakhreldeen abbas",
+      "userId": "00916824844245319717"
+     },
+     "user_tz": 0
+    },
+    "id": "22pOS9nRsUks",
+    "outputId": "4f5a57dc-0154-430c-9347-36379aa312a0"
+   },
+   "outputs": [],
+   "source": [
+    "#using camera \n",
+    "import cv2\n",
+    "\n",
+    "cap = cv2.VideoCapture(0)\n",
+    "# Check if camera opened successfully\n",
+    "if (cap.isOpened()== False): \n",
+    "  print(\"Error opening video stream or file\")\n",
+    "  \n",
+    "# Read until video is completed\n",
+    "while(cap.isOpened()):\n",
+    "  # Capture frame-by-frame\n",
+    "  ret, frame = cap.read()\n",
+    "  if ret == True:\n",
+    "        # Display the resulting frame\n",
+    "    cv2.imshow('Frame',frame)\n",
+    " \n",
+    "    # Press Q on keyboard to  exit\n",
+    "    if cv2.waitKey(25) & 0xFF == ord('q'):\n",
+    "      break\n",
+    " \n",
+    "  # Break the loop\n",
+    "  else: \n",
+    "    break\n",
+    " \n",
+    "# When everything done, release the video capture object\n",
+    "cap.release()\n",
+    " \n",
+    "# Closes all the frames\n",
+    "cv2.destroyAllWindows()\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "27j_3Kd0BdWF"
+   },
+   "source": [
+    "#<font color='red'>To do</font>\n",
+    "Let your detector use the webcam instead of an image.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "id": "2Ly0TqE8dzgH"
+   },
+   "outputs": [],
+   "source": [
+    " "
+   ]
+  }
+ ],
+ "metadata": {
+  "colab": {
+   "authorship_tag": "ABX9TyMBvtOx4s2wZLFts6jd0wa0",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.5"
+  },
+  "widgets": {
+   "application/vnd.jupyter.widget-state+json": {
+    "066685bf19f5486f92d247330e016e44": {
+     "model_module": "@jupyter-widgets/base",
+     "model_module_version": "1.2.0",
+     "model_name": "LayoutModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/base",
+      "_model_module_version": "1.2.0",
+      "_model_name": "LayoutModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "LayoutView",
+      "align_content": null,
+      "align_items": null,
+      "align_self": null,
+      "border": null,
+      "bottom": null,
+      "display": null,
+      "flex": null,
+      "flex_flow": null,
+      "grid_area": null,
+      "grid_auto_columns": null,
+      "grid_auto_flow": null,
+      "grid_auto_rows": null,
+      "grid_column": null,
+      "grid_gap": null,
+      "grid_row": null,
+      "grid_template_areas": null,
+      "grid_template_columns": null,
+      "grid_template_rows": null,
+      "height": null,
+      "justify_content": null,
+      "justify_items": null,
+      "left": null,
+      "margin": null,
+      "max_height": null,
+      "max_width": null,
+      "min_height": null,
+      "min_width": null,
+      "object_fit": null,
+      "object_position": null,
+      "order": null,
+      "overflow": null,
+      "overflow_x": null,
+      "overflow_y": null,
+      "padding": null,
+      "right": null,
+      "top": null,
+      "visibility": null,
+      "width": null
+     }
+    },
+    "0a2d8a28cb054eeca386d1046664199c": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "HTMLModel",
+     "state": {
+      "_dom_classes": [],
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "HTMLModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/controls",
+      "_view_module_version": "1.5.0",
+      "_view_name": "HTMLView",
+      "description": "",
+      "description_tooltip": null,
+      "layout": "IPY_MODEL_4bb72ecda850464ab730f58bef22bfd0",
+      "placeholder": "​",
+      "style": "IPY_MODEL_0cd9cb693f0f4eec9e54cdfcc8944dce",
+      "value": "100%"
+     }
+    },
+    "0cd9cb693f0f4eec9e54cdfcc8944dce": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "DescriptionStyleModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "DescriptionStyleModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "StyleView",
+      "description_width": ""
+     }
+    },
+    "1788a03ae7c4465f90add4f1506d843f": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "ProgressStyleModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "ProgressStyleModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "StyleView",
+      "bar_color": null,
+      "description_width": ""
+     }
+    },
+    "1fe606703e674e818b2eacb40e937e17": {
+     "model_module": "@jupyter-widgets/base",
+     "model_module_version": "1.2.0",
+     "model_name": "LayoutModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/base",
+      "_model_module_version": "1.2.0",
+      "_model_name": "LayoutModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "LayoutView",
+      "align_content": null,
+      "align_items": null,
+      "align_self": null,
+      "border": null,
+      "bottom": null,
+      "display": null,
+      "flex": null,
+      "flex_flow": null,
+      "grid_area": null,
+      "grid_auto_columns": null,
+      "grid_auto_flow": null,
+      "grid_auto_rows": null,
+      "grid_column": null,
+      "grid_gap": null,
+      "grid_row": null,
+      "grid_template_areas": null,
+      "grid_template_columns": null,
+      "grid_template_rows": null,
+      "height": null,
+      "justify_content": null,
+      "justify_items": null,
+      "left": null,
+      "margin": null,
+      "max_height": null,
+      "max_width": null,
+      "min_height": null,
+      "min_width": null,
+      "object_fit": null,
+      "object_position": null,
+      "order": null,
+      "overflow": null,
+      "overflow_x": null,
+      "overflow_y": null,
+      "padding": null,
+      "right": null,
+      "top": null,
+      "visibility": null,
+      "width": null
+     }
+    },
+    "3a450c88fabc4801ac86925e05bdab36": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "FloatProgressModel",
+     "state": {
+      "_dom_classes": [],
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "FloatProgressModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/controls",
+      "_view_module_version": "1.5.0",
+      "_view_name": "ProgressView",
+      "bar_style": "success",
+      "description": "",
+      "description_tooltip": null,
+      "layout": "IPY_MODEL_860c422b9baf4e2282424c07b9cd132c",
+      "max": 167502836,
+      "min": 0,
+      "orientation": "horizontal",
+      "style": "IPY_MODEL_1788a03ae7c4465f90add4f1506d843f",
+      "value": 167502836
+     }
+    },
+    "490c7e00387e4bf2954dfb13a94f061a": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "HBoxModel",
+     "state": {
+      "_dom_classes": [],
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "HBoxModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/controls",
+      "_view_module_version": "1.5.0",
+      "_view_name": "HBoxView",
+      "box_style": "",
+      "children": [
+       "IPY_MODEL_0a2d8a28cb054eeca386d1046664199c",
+       "IPY_MODEL_3a450c88fabc4801ac86925e05bdab36",
+       "IPY_MODEL_7c52281dcd0c4a2c91d3fc2d26f59f2a"
+      ],
+      "layout": "IPY_MODEL_1fe606703e674e818b2eacb40e937e17"
+     }
+    },
+    "4bb72ecda850464ab730f58bef22bfd0": {
+     "model_module": "@jupyter-widgets/base",
+     "model_module_version": "1.2.0",
+     "model_name": "LayoutModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/base",
+      "_model_module_version": "1.2.0",
+      "_model_name": "LayoutModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "LayoutView",
+      "align_content": null,
+      "align_items": null,
+      "align_self": null,
+      "border": null,
+      "bottom": null,
+      "display": null,
+      "flex": null,
+      "flex_flow": null,
+      "grid_area": null,
+      "grid_auto_columns": null,
+      "grid_auto_flow": null,
+      "grid_auto_rows": null,
+      "grid_column": null,
+      "grid_gap": null,
+      "grid_row": null,
+      "grid_template_areas": null,
+      "grid_template_columns": null,
+      "grid_template_rows": null,
+      "height": null,
+      "justify_content": null,
+      "justify_items": null,
+      "left": null,
+      "margin": null,
+      "max_height": null,
+      "max_width": null,
+      "min_height": null,
+      "min_width": null,
+      "object_fit": null,
+      "object_position": null,
+      "order": null,
+      "overflow": null,
+      "overflow_x": null,
+      "overflow_y": null,
+      "padding": null,
+      "right": null,
+      "top": null,
+      "visibility": null,
+      "width": null
+     }
+    },
+    "7c52281dcd0c4a2c91d3fc2d26f59f2a": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "HTMLModel",
+     "state": {
+      "_dom_classes": [],
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "HTMLModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/controls",
+      "_view_module_version": "1.5.0",
+      "_view_name": "HTMLView",
+      "description": "",
+      "description_tooltip": null,
+      "layout": "IPY_MODEL_066685bf19f5486f92d247330e016e44",
+      "placeholder": "​",
+      "style": "IPY_MODEL_9316bb5814924bd1a863e022d4ba23ee",
+      "value": " 160M/160M [00:01&lt;00:00, 103MB/s]"
+     }
+    },
+    "860c422b9baf4e2282424c07b9cd132c": {
+     "model_module": "@jupyter-widgets/base",
+     "model_module_version": "1.2.0",
+     "model_name": "LayoutModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/base",
+      "_model_module_version": "1.2.0",
+      "_model_name": "LayoutModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "LayoutView",
+      "align_content": null,
+      "align_items": null,
+      "align_self": null,
+      "border": null,
+      "bottom": null,
+      "display": null,
+      "flex": null,
+      "flex_flow": null,
+      "grid_area": null,
+      "grid_auto_columns": null,
+      "grid_auto_flow": null,
+      "grid_auto_rows": null,
+      "grid_column": null,
+      "grid_gap": null,
+      "grid_row": null,
+      "grid_template_areas": null,
+      "grid_template_columns": null,
+      "grid_template_rows": null,
+      "height": null,
+      "justify_content": null,
+      "justify_items": null,
+      "left": null,
+      "margin": null,
+      "max_height": null,
+      "max_width": null,
+      "min_height": null,
+      "min_width": null,
+      "object_fit": null,
+      "object_position": null,
+      "order": null,
+      "overflow": null,
+      "overflow_x": null,
+      "overflow_y": null,
+      "padding": null,
+      "right": null,
+      "top": null,
+      "visibility": null,
+      "width": null
+     }
+    },
+    "9316bb5814924bd1a863e022d4ba23ee": {
+     "model_module": "@jupyter-widgets/controls",
+     "model_module_version": "1.5.0",
+     "model_name": "DescriptionStyleModel",
+     "state": {
+      "_model_module": "@jupyter-widgets/controls",
+      "_model_module_version": "1.5.0",
+      "_model_name": "DescriptionStyleModel",
+      "_view_count": null,
+      "_view_module": "@jupyter-widgets/base",
+      "_view_module_version": "1.2.0",
+      "_view_name": "StyleView",
+      "description_width": ""
+     }
+    }
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
