@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content">
+        
+        <h1>{{title}}</h1>
+        <p>{{description}}</p>
+        <table border=1 style="width:100%">
+            <form action="/upload" method="post">
+            <tr>
+              <td><input type="file" name="file" value="Please choose an image" ></td>
+              <td><input type="submit" class="btnRegister "  value="Upload Image"/></td>
+               
+            </tr>
+            <tr><td colspan="2"><img src="{{url_for('static', filename=file_name)}}" width="800" height="800" ></td></tr>
+        </form>
+          </table>
+
+        <table border=1 style="width:100%">
+            <tr>
+              <th>Objects</th>
+              <th>Confidence</th>
+              
+            </tr>
+            {%for i in range(0,objects|length)%}
+            <tr>
+              
+              <td>{{ objects[i]}}</td>
+              <td>{{ confidence[i]}}</td>
+              
+            </tr>
+            {% endfor %}
+            
+          </table>
+          List of Objects : 
+          {% for item in objects_list %}
+          <li>{{ item }}  </li>
+          {% endfor %}
+
+    </div>
+    
+{% endblock %}
